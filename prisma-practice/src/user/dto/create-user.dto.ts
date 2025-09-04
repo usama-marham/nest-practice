@@ -1,7 +1,6 @@
 import { Role } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
