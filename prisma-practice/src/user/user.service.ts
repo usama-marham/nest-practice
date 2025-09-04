@@ -20,6 +20,7 @@ export class UserService {
 
   async findAll(skip = 0, take = 20): Promise<User[]> {
     return await this.prismaService.user.findMany({
+      where: { deletedAt: null },
       skip, // pagination offset
       take, // pagination limit
       orderBy: { id: 'asc' }, //smallest id first
@@ -28,7 +29,7 @@ export class UserService {
 
   async findOne(id: number): Promise<User> {
     const user = await this.prismaService.user.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
 
     if (!user) {
@@ -40,16 +41,25 @@ export class UserService {
 
   async update(id: number, body: any): Promise<User> {
     const updateUser = await this.prismaService.user.update({
-      where: { id },
+      where: { id, deletedAt: null },
       data: body,
     });
     return updateUser;
   }
 
   async remove(id: number): Promise<void> {
-    const deleteUser = await this.prismaService.user.delete({
-      where: {
-        id,
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+    if (!user || user.deletedAt) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    await this.prismaService.user.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        email: `${user.email}_deleted_${Date.now()}`,
       },
     });
   }
