@@ -24,7 +24,8 @@ model User{
   firstName String @db.VarChar(20) @map("first_name")
   lastName String @db.VarChar(20) @map("last_name")
   email String @unique
-  age Int 
+  password String? @db.VarChar(20) @default("strong")
+  age Int @default(0) 
   isActive Boolean @default(true) @map("is_active")
   isEmailVerified Boolean @default(false) @map("is_email_verified")
   role Role @default(USER)

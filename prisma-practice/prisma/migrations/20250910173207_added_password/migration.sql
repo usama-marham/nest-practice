@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `users` ADD COLUMN `password` VARCHAR(20) NOT NULL DEFAULT 'strong',
+    MODIFY `age` INTEGER NOT NULL DEFAULT 0;
